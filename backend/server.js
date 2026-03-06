@@ -24,21 +24,28 @@ const allowedOrigins = [
   "http://localhost:5173",
   "http://127.0.0.1:3000",
   "http://127.0.0.1:5173",
-  CLIENT_URL,
+  "https://live-election.vercel.app",
+  "https://live-election-git-main-luffy-28s-projects.vercel.app",
+  process.env.CLIENT_URL,
 ].filter(Boolean);
-
 app.use(
   cors({
-    origin: (origin, cb) => {
-      if (!origin || allowedOrigins.includes(origin)) {
-        return cb(null, true);
+    origin: function (origin, callback) {
+      console.log("Request origin:", origin);
+
+      if (!origin) {
+        return callback(null, true);
       }
-      return cb(new Error("Not allowed by CORS"));
+
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+
+      return callback(new Error(`Not allowed by CORS: ${origin}`));
     },
     credentials: true,
   })
 );
-
 app.use(express.json());
 
 // ─────────────────────────────────────────────────────────────
@@ -205,8 +212,8 @@ async function fetchAndSync() {
         c.status === "DECLARED" || hasWinner
           ? "declared"
           : totalVotes > 0 || c.status === "COUNTING"
-          ? "counting"
-          : "pending";
+            ? "counting"
+            : "pending";
 
       await Constituency.findOneAndUpdate(
         { code: c.code },
