@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 
-const API_BASE = process.env.REACT_APP_API_URL || 'https://live-election-xcf1-git-main-luffy-28s-projects.vercel.app/api';
+const API_BASE = process.env.REACT_APP_API_URL || 'https://live-election-xcf1.vercel.app/api';
 
 
 export function useElectionData(endpoint, refreshInterval = 30000) {
