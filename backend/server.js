@@ -215,6 +215,10 @@ app.get('/api/summary', async (req, res) => {
   } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
+app.get("/", (req, res) => {
+  res.send("Nepal Election API is running");
+});
+
 app.get('/api/constituencies', async (req, res) => {
   try {
     const { province, status, search } = req.query;
