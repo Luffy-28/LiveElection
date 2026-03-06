@@ -485,9 +485,12 @@ app.get("/api/provinces", async (req, res) => {
 });
 
 app.get("/api/photo/:candidateId", async (req, res) => {
-  const { candidateId } = req.params;
+  let { candidateId } = req.params;
 
   try {
+    // allow both /12345 and /12345.jpg
+    candidateId = String(candidateId).replace(/\.jpg$/i, "");
+
     if (!/^\d+$/.test(candidateId)) {
       return res.status(400).json({ error: "Invalid candidate ID" });
     }
