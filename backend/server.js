@@ -350,10 +350,10 @@ app.post('/api/clear-db', async (req, res) => {
 });
 
 // ─── Cron: every 30 seconds ───────────────────────────────────────────
-cron.schedule('*/30 * * * * *', () => fetchAndSync().catch(console.error));
+cron.schedule('*/300 * * * * *', () => fetchAndSync().catch(console.error));
 
 const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => {
   console.log(`🚀 Nepal Election API running on port ${PORT}`);
-  setTimeout(() => fetchAndSync().catch(console.error), 1500);
+  setTimeout(() => fetchAndSync().catch(console.error), 3500);
 });
