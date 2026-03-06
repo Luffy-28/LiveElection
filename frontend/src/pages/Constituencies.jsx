@@ -46,8 +46,11 @@ const PROVINCE_COLORS = {
   Gandaki: '#6366F1', Lumbini: '#EC4899', Karnali: '#14B8A6', Sudurpashchim: '#F97316'
 };
 
-const PHOTO_BASE = import.meta.env.VITE_API_URL;
-function photoUrl(id) { return `${PHOTO_BASE}/photo/${id}`; }
+const API_BASE_URL = (import.meta.env.VITE_API_URL || "").replace(/\/$/, "");
+function photoUrl(id) {
+  if (!id) return "";
+  return `${API_BASE_URL}/api/photo/${id}`;
+}
 function pc(n) { return partyColor(n); }
 function pe(n) { return partyEn(n); }
 function avatarBg(name) {
@@ -78,19 +81,46 @@ function flattenCandidates(constituencies) {
 /* ── Photo component ─────────────────────────────────────────── */
 const CandidatePhoto = ({ candidateId, name, size, fallbackBg }) => {
   const [failed, setFailed] = useState(false);
+
+  useEffect(() => {
+    setFailed(false);
+  }, [candidateId]);
+
+  const src = photoUrl(candidateId);
+
   if (failed || !candidateId) {
     return (
-      <div style={{
-        width: '100%', height: '100%', background: fallbackBg, display: 'flex',
-        alignItems: 'center', justifyContent: 'center', fontSize: size * 0.3 + 'px',
-        fontWeight: 700, color: 'rgba(255,255,255,0.85)', fontFamily: 'Mukta, sans-serif'
-      }}>
+      <div
+        style={{
+          width: "100%",
+          height: "100%",
+          background: fallbackBg,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          fontSize: size * 0.3 + "px",
+          fontWeight: 700,
+          color: "rgba(255,255,255,0.85)",
+          fontFamily: "Mukta, sans-serif",
+        }}
+      >
         {initials(name)}
       </div>
     );
   }
-  return <img src={photoUrl(candidateId)} alt={name} loading="lazy"
-    onError={() => setFailed(true)} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />;
+
+  return (
+    <img
+      src={src}
+      alt={name}
+      loading="lazy"
+      onError={() => {
+        console.log("Image failed:", src, "candidateId:", candidateId);
+        setFailed(true);
+      }}
+      style={{ width: "100%", height: "100%", objectFit: "cover" }}
+    />
+  );
 };
 
 /* ── Candidate Card ──────────────────────────────────────────── */
