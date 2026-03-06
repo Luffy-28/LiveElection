@@ -21,7 +21,7 @@ app.use(cors({
 }));
 app.use(express.json());
 
-const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/nepal_election_2082';
+const MONGO_URI = process.env.MONGO_URI;
 mongoose.connect(MONGO_URI)
   .then(() => console.log('✅ MongoDB connected'))
   .catch(err => console.error('❌ MongoDB error:', err));
@@ -276,7 +276,7 @@ app.get('/api/photo/:candidateId', async (req, res) => {
     }
 
     const url = `https://result.election.gov.np/Images/Candidate/${candidateId}.jpg`;
-    
+
 
     const response = await axios.get(url, {
       responseType: 'stream',

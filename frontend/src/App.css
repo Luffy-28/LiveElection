@@ -532,3 +532,77 @@ body {
 .fade-in-delay-1 { animation-delay: 0.1s; }
 .fade-in-delay-2 { animation-delay: 0.2s; }
 .fade-in-delay-3 { animation-delay: 0.3s; }
+
+/* ── Light mode theme override ─────────────────────────────── */
+html[data-theme="light"],
+html[data-theme="light"] :root {
+  --nepal-dark: #F3F4F6;
+  --nepal-card: #FFFFFF;
+  --nepal-border: #E5E7EB;
+  --nepal-white: #111827;
+  --nepal-muted: #6B7280;
+  --nepal-accent: #D97706;
+  --nepal-green: #059669;
+}
+
+html[data-theme="light"] body {
+  background: #F3F4F6 !important;
+  color: #111827 !important;
+}
+
+html[data-theme="light"] .app-wrapper {
+  background: #F3F4F6 !important;
+  color: #111827 !important;
+}
+
+html[data-theme="light"] .nepal-navbar {
+  background: #FFFFFF !important;
+  border-bottom: 1px solid #E5E7EB !important;
+}
+
+html[data-theme="light"] .brand-title {
+  color: #111827 !important;
+}
+
+html[data-theme="light"] .brand-subtitle {
+  color: #6B7280 !important;
+}
+
+html[data-theme="light"] .nav-link-custom {
+  color: #6B7280 !important;
+}
+
+html[data-theme="light"] .nav-link-custom.active {
+  color: #111827 !important;
+  background: rgba(0,0,0,0.06) !important;
+}
+
+html[data-theme="light"] .candidate-row {
+  background: #FFFFFF !important;
+  border-color: #E5E7EB !important;
+  color: #111827 !important;
+}
+
+html[data-theme="light"] .candidate-row.winner {
+  background: linear-gradient(135deg, #ECFDF5, #EFF6FF) !important;
+}
+
+html[data-theme="light"] .status-badge {
+  border-color: #E5E7EB !important;
+  color: #374151 !important;
+  background: #F9FAFB !important;
+}
+
+html[data-theme="light"] .stat-card {
+  background: #FFFFFF !important;
+  border-color: #E5E7EB !important;
+  color: #111827 !important;
+}
+
+html[data-theme="light"] .loading-spinner {
+  background: #F3F4F6 !important;
+}
+
+html[data-theme="light"] .vote-bar-track {
+  background: #E5E7EB !important;
+}

@@ -2,6 +2,9 @@ import React from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { useElectionData } from '../hooks/useElectionData';
+import { PartyFlag, partyEn } from '../constants/parties';
+import { useApp } from '../context/AppContext';
+import { T, PROVINCE_NAMES_NP } from '../constants/translations';
 
 const PROVINCE_COLORS = {
   'Koshi': '#FF6B6B',
@@ -24,13 +27,15 @@ const PROVINCE_EMOJIS = {
 };
 
 const Provinces = () => {
+  const { lang } = useApp();
+  const t = T[lang];
   const { data: provinces, loading } = useElectionData('/provinces', 30000);
 
   if (loading) {
     return (
       <div className="loading-spinner">
         <div className="spinner-ring" />
-        <span style={{ color: 'var(--nepal-muted)' }}>Loading provinces…</span>
+        <span style={{ color: 'var(--nepal-muted)' }}>{lang === 'np' ? 'प्रदेश लोड हुँदैछ…' : 'Loading provinces…'}</span>
       </div>
     );
   }
@@ -38,10 +43,10 @@ const Provinces = () => {
   return (
     <Container className="mt-4">
       <h4 style={{ fontFamily: 'Bebas Neue', letterSpacing: '2px', marginBottom: '0.5rem' }}>
-        PROVINCE-WISE RESULTS
+        {t.provTitle}
       </h4>
       <p style={{ color: 'var(--nepal-muted)', fontSize: '0.85rem', marginBottom: '1.5rem' }}>
-        Nepal's 7 provinces — {(provinces || []).reduce((s, p) => s + (p.total || 0), 0)} FPTP constituencies
+        {t.provSubtitle} — {(provinces || []).reduce((s, p) => s + (p.total || 0), 0)} FPTP {lang === 'np' ? 'निर्वाचन क्षेत्र' : 'constituencies'}
       </p>
 
       <Row className="g-3">
@@ -49,8 +54,8 @@ const Provinces = () => {
           const color = PROVINCE_COLORS[prov.name] || '#607D8B';
           const emoji = PROVINCE_EMOJIS[prov.name] || '🗺️';
           const pct = prov.total > 0 ? Math.round((prov.declared / prov.total) * 100) : 0;
+          const displayName = lang === 'np' ? (PROVINCE_NAMES_NP[prov.name] || prov.name) : prov.name;
 
-          // Top parties
           const topParties = Object.entries(prov.partyBreakdown || {})
             .sort((a, b) => b[1] - a[1])
             .slice(0, 3);
@@ -66,57 +71,48 @@ const Provinces = () => {
                   <div>
                     <div className="d-flex align-items-center gap-2">
                       <span style={{ fontSize: '1.5rem' }}>{emoji}</span>
-                      <span className="province-name" style={{ color }}>{prov.name}</span>
+                      <span className="province-name" style={{ color }}>{displayName}</span>
                     </div>
                     <div style={{ fontSize: '0.75rem', color: 'var(--nepal-muted)', marginLeft: '2rem' }}>
-                      Province
+                      {t.provProvince}
                     </div>
                   </div>
                   <div className="text-end">
                     <div style={{ fontFamily: 'Bebas Neue', fontSize: '1.4rem' }}>
                       {prov.declared}/{prov.total}
                     </div>
-                    <div style={{ fontSize: '0.7rem', color: 'var(--nepal-muted)' }}>seats declared</div>
+                    <div style={{ fontSize: '0.7rem', color: 'var(--nepal-muted)' }}>{t.provSeatsDecl}</div>
                   </div>
                 </div>
 
-                {/* Progress bar */}
                 <div className="province-progress mb-2">
                   <div className="province-progress-fill" style={{ width: `${pct}%`, background: color }} />
                 </div>
 
-                {/* Stats row */}
                 <div className="d-flex gap-3 mb-2">
                   <div style={{ textAlign: 'center' }}>
-                    <div style={{ fontFamily: 'Bebas Neue', fontSize: '1.1rem', color: '#3FB950' }}>
-                      {prov.declared}
-                    </div>
-                    <div style={{ fontSize: '0.6rem', color: 'var(--nepal-muted)', textTransform: 'uppercase' }}>Declared</div>
+                    <div style={{ fontFamily: 'Bebas Neue', fontSize: '1.1rem', color: '#3FB950' }}>{prov.declared}</div>
+                    <div style={{ fontSize: '0.6rem', color: 'var(--nepal-muted)', textTransform: 'uppercase' }}>{t.provDeclared}</div>
                   </div>
                   <div style={{ textAlign: 'center' }}>
-                    <div style={{ fontFamily: 'Bebas Neue', fontSize: '1.1rem', color: 'var(--nepal-accent)' }}>
-                      {prov.counting}
-                    </div>
-                    <div style={{ fontSize: '0.6rem', color: 'var(--nepal-muted)', textTransform: 'uppercase' }}>Counting</div>
+                    <div style={{ fontFamily: 'Bebas Neue', fontSize: '1.1rem', color: 'var(--nepal-accent)' }}>{prov.counting}</div>
+                    <div style={{ fontSize: '0.6rem', color: 'var(--nepal-muted)', textTransform: 'uppercase' }}>{t.provCounting}</div>
                   </div>
                   <div style={{ textAlign: 'center' }}>
-                    <div style={{ fontFamily: 'Bebas Neue', fontSize: '1.1rem', color: 'var(--nepal-muted)' }}>
-                      {prov.pending}
-                    </div>
-                    <div style={{ fontSize: '0.6rem', color: 'var(--nepal-muted)', textTransform: 'uppercase' }}>Pending</div>
+                    <div style={{ fontFamily: 'Bebas Neue', fontSize: '1.1rem', color: 'var(--nepal-muted)' }}>{prov.pending}</div>
+                    <div style={{ fontSize: '0.6rem', color: 'var(--nepal-muted)', textTransform: 'uppercase' }}>{t.provPending}</div>
                   </div>
                   <div style={{ flex: 1 }} />
                   <div style={{ textAlign: 'right' }}>
-                    <div style={{ fontSize: '0.7rem', color: 'var(--nepal-muted)' }}>Progress</div>
+                    <div style={{ fontSize: '0.7rem', color: 'var(--nepal-muted)' }}>{t.provProgress}</div>
                     <div style={{ fontFamily: 'Bebas Neue', fontSize: '1.3rem', color }}>{pct}%</div>
                   </div>
                 </div>
 
-                {/* Leading parties */}
                 {topParties.length > 0 && (
                   <div>
                     <div style={{ fontSize: '0.65rem', color: 'var(--nepal-muted)', marginBottom: '0.3rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-                      Leading parties
+                      {t.provLeading}
                     </div>
                     <div className="d-flex gap-2 flex-wrap">
                       {topParties.map(([party, seats]) => (
@@ -135,8 +131,8 @@ const Provinces = () => {
                   </div>
                 )}
 
-                <div style={{ fontSize: '0.7rem', color: color, marginTop: '0.75rem', fontWeight: 600 }}>
-                  View all {prov.total} constituencies →
+                <div style={{ fontSize: '0.7rem', color, marginTop: '0.75rem', fontWeight: 600 }}>
+                  {t.provViewAll} {prov.total} {t.provConstituencies}
                 </div>
               </Link>
             </Col>

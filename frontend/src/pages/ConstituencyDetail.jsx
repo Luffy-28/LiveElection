@@ -3,9 +3,11 @@ import { Container, Row, Col } from 'react-bootstrap';
 import { useParams, Link } from 'react-router-dom';
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts';
 import { useElectionData } from '../hooks/useElectionData';
+import { useApp } from '../context/AppContext';
+import { T, PROVINCE_NAMES_NP } from '../constants/translations';
 import { PartyFlag, partyColor, partyEn, PARTY_EN } from '../constants/parties';
 
-const CANDIDATE_PHOTO_BASE = process.env.CANDIDATE_PHOTO_BASE;
+const CANDIDATE_PHOTO_BASE = '/api/photo';
 
 const COLORS = [
   '#DC143C',
@@ -96,6 +98,8 @@ const PartyLogo = ({ partyName, size = 24 }) => (
 );
 
 const ConstituencyDetail = () => {
+  const { dark, lang } = useApp();
+  const t = T[lang];
   const { id } = useParams();
   const { data: c, loading } = useElectionData(`/constituencies/${id}`, 15000);
 
@@ -191,7 +195,7 @@ const ConstituencyDetail = () => {
                 marginBottom: '0.25rem',
               }}
             >
-              {c.name || c.constituencyName}
+              {lang === 'np' ? (c.nameNp || c.name) : (c.name || c.constituencyName)}
             </h2>
 
             <p style={{ color: 'var(--nepal-muted)', fontSize: '0.85rem', marginBottom: 0 }}>
@@ -200,7 +204,7 @@ const ConstituencyDetail = () => {
           </div>
 
           <div className="text-end">
-            <div style={{ color: 'var(--nepal-muted)', fontSize: '0.75rem' }}>Total votes counted</div>
+            <div style={{ color: 'var(--nepal-muted)', fontSize: '0.75rem' }}>{t.detailTotalVotes}</div>
             <div
               style={{
                 fontFamily: 'Bebas Neue',
@@ -259,7 +263,7 @@ const ConstituencyDetail = () => {
               marginBottom: '1rem',
             }}
           >
-            CANDIDATE RESULTS
+            {t.detailCandidates}
           </h5>
 
           {normalizedCandidates.map((cand, i) => {
@@ -298,7 +302,7 @@ const ConstituencyDetail = () => {
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div className="d-flex justify-content-between align-items-center mb-1 gap-2">
                     <div style={{ minWidth: 0 }}>
-                      <div style={{ fontWeight: 600, color: 'var(--nepal-white)' }}>{cand.name}</div>
+                      <div style={{ fontWeight: 600, color: 'var(--nepal-white)' }}>{lang === 'np' && cand.nameNp ? cand.nameNp : cand.name}</div>
                       {!!cand.nameNp && (
                         <div style={{ fontSize: '0.72rem', color: 'var(--nepal-muted)' }}>
                           {cand.nameNp}
@@ -385,7 +389,7 @@ const ConstituencyDetail = () => {
                   marginBottom: '1rem',
                 }}
               >
-                VOTE SHARE
+                {t.detailVoteShare}
               </h6>
 
               <ResponsiveContainer width="100%" height={240}>
@@ -406,7 +410,7 @@ const ConstituencyDetail = () => {
 
                   <Tooltip
                     contentStyle={{
-                      background: '#1C2128',
+                      background: dark ? '#1C2128' : '#FFFFFF',
                       border: '1px solid var(--nepal-border)',
                       borderRadius: '8px',
                       fontSize: '0.8rem',
@@ -477,20 +481,20 @@ const ConstituencyDetail = () => {
                 marginBottom: '1rem',
               }}
             >
-              CONSTITUENCY INFO
+              {t.detailInfo}
             </h6>
 
             {[
-              { label: 'Province', value: c.province },
-              { label: 'District', value: c.district },
-              { label: 'Total Candidates', value: c.candidates?.length || 0 },
-              { label: 'Votes Counted', value: totalVotes.toLocaleString() },
+              { label: t.detailProvince, value: lang === 'np' ? (PROVINCE_NAMES_NP[c.province] || c.province) : c.province },
+              { label: t.detailDistrict, value: c.district },
+              { label: t.detailTotalCandidates, value: c.candidates?.length || 0 },
+              { label: t.detailVotesCounted, value: totalVotes.toLocaleString() },
               {
-                label: 'Status',
+                label: t.detailStatus,
                 value: c.status ? c.status.charAt(0).toUpperCase() + c.status.slice(1) : '—',
               },
               {
-                label: 'Last Updated',
+                label: t.detailLastUpdated,
                 value: c.lastUpdated ? new Date(c.lastUpdated).toLocaleString() : '—',
               },
             ].map((row) => (

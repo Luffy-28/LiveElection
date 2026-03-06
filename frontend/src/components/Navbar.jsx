@@ -40,7 +40,7 @@ const Navbar = () => {
                   { to: '/', label: lang === 'np' ? 'ड्यासबोर्ड' : 'Dashboard', match: p => p === '/' },
                   { to: '/constituencies', label: lang === 'np' ? 'निर्वाचन क्षेत्र' : 'Constituencies', match: p => p.startsWith('/constituencies') },
                   { to: '/provinces', label: lang === 'np' ? 'प्रदेश' : 'Provinces', match: p => p === '/provinces' },
-                  { to: '/map', label: lang === 'np' ? 'नक्सा' : 'Map', match: p => p === '/map' },
+                  //  { to: '/map', label: lang === 'np' ? 'नक्सा' : 'Map', match: p => p === '/map' },
                 ].map(({ to, label, match }) => (
                   <Link
                     key={to}
