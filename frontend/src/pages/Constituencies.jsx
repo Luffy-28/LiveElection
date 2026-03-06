@@ -46,8 +46,8 @@ const PROVINCE_COLORS = {
   Gandaki: '#6366F1', Lumbini: '#EC4899', Karnali: '#14B8A6', Sudurpashchim: '#F97316'
 };
 
-const PHOTO_BASE = '/api/photo';
-function photoUrl(id) { return `${PHOTO_BASE}/${id}`; }
+const PHOTO_BASE = import.meta.env.VITE_API_URL;
+function photoUrl(id) { return `${PHOTO_BASE}/photo/${id}`; }
 function pc(n) { return partyColor(n); }
 function pe(n) { return partyEn(n); }
 function avatarBg(name) {
