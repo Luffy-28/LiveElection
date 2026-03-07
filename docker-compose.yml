@@ -19,10 +19,10 @@ services:
     container_name: nepal_election_backend
     restart: unless-stopped
     ports:
-      - "5000:5000"
+      - "10000:10000"
     environment:
-      PORT: 5000
-      MONGO_URI: mongodb://mongodb:27017/nepal_election_2082
+      PORT: 10000
+      MONGO_URI: mongodb+srv://db_user:db_user@cluster0.ujmmmgf.mongodb.net/
     depends_on:
       - mongodb
 
@@ -35,7 +35,7 @@ services:
     ports:
       - "3000:80"
     environment:
-      REACT_APP_API_URL: http://localhost:5000/api
+      REACT_APP_API_URL: https://liveelection-1.onrender.com
     depends_on:
       - backend
 
